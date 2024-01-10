@@ -20,6 +20,7 @@ const config = {
     extend: {
       colors: {
         darkBackground:"#09090B",
+        brand:"#89939E",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -73,6 +74,13 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      screens:{
+        'sm': '758px'
+      },
+      fontFamily:{
+        'crimson': "var(--font-crimson)",
+        'luckiestGuy': "var(--font-luckiest-guy)",
+      }
     },
   },
   plugins: [require("tailwindcss-animate")],

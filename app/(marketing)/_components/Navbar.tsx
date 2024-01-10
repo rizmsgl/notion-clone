@@ -14,7 +14,6 @@ export const Navbar = () => {
     const {isLoaded, isSignedIn, user} = useUser();
     const scrolled = useScrollTop();
     const [isOpen, setIsOpen] = useState(false);
-    console.log(user);
     const toggle = () =>{
         setIsOpen(!isOpen);
     }
@@ -24,7 +23,7 @@ export const Navbar = () => {
                 "w-full flex align-center justify-center sticky top-0 z-50 bg-background dark:bg-darkBackground p-6",
                 scrolled && "border-b shadow-sm"
             )}>
-                <div className="w-[85%] flex items-center py-1">
+                <div className="w-[85%] max-sm:w-ful flex items-center py-1">
                     <Logo/>
                     {/* Big screens */}
                     <div className="max-sm:hidden w-1/2 justify-end flex items-center gap-x-2">
@@ -82,7 +81,7 @@ export const Navbar = () => {
                     (
                         <li key={1} className="px-4 size-full flex items-start decoration-0
                         list-none cursor-pointer border-b pb-2">
-                            <Button disabled size="sm" variant="link">
+                            <Button disabled variant="link">
                                 <ReloadIcon className="mr-2 h-4 w-4 animate-spin"/>
                                 Please wait
                             </Button>
@@ -93,7 +92,7 @@ export const Navbar = () => {
                     <li key={2} className="px-4 size-full flex items-start decoration-0 list-none
                     cursor-pointer border-b pb-2">
                         <SignInButton mode="modal">
-                            <Button size="sm" variant="link">
+                            <Button  variant="link">
                                 <PersonIcon className="mr-2 h-4 w-4"/> Login
                             </Button>
                         </SignInButton>
@@ -104,7 +103,7 @@ export const Navbar = () => {
                     isSignedIn && isLoaded &&(
                         <li key={3} className="px-4 size-full flex items-start decoration-0 list-none
                     cursor-pointer border-b pb-2">
-                            <p className="ml-3 text-primary text-xs font-medium">
+                            <p className="ml-3 text-primary text-sm font-medium">
                                 Welcome {user?.firstName}
                             </p>
                         </li>
@@ -114,7 +113,7 @@ export const Navbar = () => {
                     isSignedIn && isLoaded && (
                         <li key={4} className="px-4 size-full flex items-start decoration-0 list-none
                     cursor-pointer border-b pb-2">
-                            <Button variant="link" size="sm" asChild>
+                            <Button variant="link"  asChild>
                                 <Link href="/">
                                     Enter Note Niche
                                 </Link>
@@ -128,7 +127,7 @@ export const Navbar = () => {
                     cursor-pointer border-b pb-2">
                             <div className="flex items-center">
                                 <UserButton afterSignOutUrl="/"/>
-                                <span className="ml-2 text-primary text-xs font-medium">Your Account</span>
+                                <span className="ml-2 text-primary text-sm font-medium">Your Account</span>
                             </div>
                         </li>
                     )

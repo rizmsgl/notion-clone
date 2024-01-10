@@ -1,9 +1,10 @@
+import {Hero} from "@/app/(marketing)/_components/Hero";
 
 
 const MarketingPage = ()=>{
     return(
-        <div>
-            <h1>Hello World !</h1>
+        <div className="min-h-full dark:bg-darkBackground">
+            <Hero/>
         </div>
     )
 }

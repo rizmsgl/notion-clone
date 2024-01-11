@@ -3,7 +3,7 @@ import {EnvelopeClosedIcon, GitHubLogoIcon, LinkedInLogoIcon} from "@radix-ui/re
 
 export const Footer = () => {
     return (
-        <div className="bg-background dark:bg-darkBackground max-sm:mt-[100px]">
+        <div className="bg-background dark:bg-darkBackground max-sm:mt-[120px] border-t">
             <div className="py-[28px] px-[20px] flex flex-col items-center justify-center
             max-w-[1100px] my-0 mx-auto">
                 <div className="max-w-[1000px] w-full">

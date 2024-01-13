@@ -86,10 +86,10 @@ export const Navigation = () => {
             navbarRef.current.style.setProperty("width", `calc(100%- ${newWidth}px)`);
         }
     }
-    const handleMouseUP = () =>{
+    const handleMouseUp = () =>{
         isResizingRef.current = false;
         document.removeEventListener("mousemove", handleMouseMove);
-        document.removeEventListener("mouseup", handleMouseUP);
+        document.removeEventListener("mouseup", handleMouseUp);
     }
     return (
         <>

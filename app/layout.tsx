@@ -41,6 +41,7 @@ export default function RootLayout({
             storageKey="note-niche-theme"
         >
           {children}
+
         </ThemeProvider>
         </body>
         </html>

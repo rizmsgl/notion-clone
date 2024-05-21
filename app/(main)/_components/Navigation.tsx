@@ -10,13 +10,14 @@ import {User} from "@/app/(main)/_components/User";
 import {Item} from "@/app/(main)/_components/Item";
 import {PlusIcon, Search, Settings, Trash} from "lucide-react";
 import {DocumentsList} from "@/app/(main)/_components/DocumentsList";
-import {Popover} from "@radix-ui/react-popover";
-import {PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {Popover,PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {useToast} from "@/components/ui/use-toast";
 
 export const Navigation = () => {
     const router = useRouter();
     const settings = useSettings();
     const search = useSearch();
+    const {toast} = useToast();
     const params = useParams();
     const pathname = usePathname();
     const isMobile = useMediaQuery("(max-width: 768px)");
@@ -91,6 +92,36 @@ export const Navigation = () => {
         document.removeEventListener("mousemove", handleMouseMove);
         document.removeEventListener("mouseup", handleMouseUp);
     }
+
+    // handle create
+    const handleCreate = async () =>{
+        try{
+            const response = await fetch('/api/documents/document/',{
+                method: 'POST',
+                headers:{
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({title: 'Untitled', parentDocument: null}),
+            });
+            if (!response.ok)
+                throw new Error('Failed to create a new note.');
+            const data = await response.json();
+            const documentId = data._id;
+            router.push(`/documents/${documentId}`);
+            toast({
+                title: "New note.",
+                description: "Note created successfully."
+            });
+        }catch (error){
+            console.error('Error creating document: ', error);
+            toast({
+                variant: "destructive",
+                title: "Oops ! something went wrong.",
+                description: "Failed to create new note.",
+            })
+        }
+    }
+
     return (
         <>
             <aside ref={sidebarRef} className={cn("group/sidebar h-full bg-secondary" +
@@ -110,7 +141,7 @@ export const Navigation = () => {
                     <User/>
                     <Item label="Search" icon={Search} isSearch onClick={search.onOpen}/>
                     <Item label="Settings" icon={Settings} onClick={settings.onOpen}/>
-                    <Item label="New Page" icon={PlusIcon}/>
+                    <Item label="New Page" icon={PlusIcon} onClick={handleCreate}/>
                 </div>
                 {/* Document List*/}
                 <div className="mt-4">

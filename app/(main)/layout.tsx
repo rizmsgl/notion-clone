@@ -3,6 +3,7 @@ import {useUser} from "@clerk/nextjs";
 import {ClipLoader} from "react-spinners";
 import {redirect} from "next/navigation";
 import {Navigation} from "@/app/(main)/_components/Navigation";
+import {Toaster} from "@/components/ui/toaster";
 
 
 const MainLayout = ({children}:{children: React.ReactNode}) =>{
@@ -22,6 +23,7 @@ const MainLayout = ({children}:{children: React.ReactNode}) =>{
             <main className="flex-1 h-full overflow-y-auto">
                 {children}
             </main>
+            <Toaster />
         </div>
     )
 }

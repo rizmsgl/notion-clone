@@ -6,8 +6,7 @@ import SettingsModal from "@/components/modals/settings-modal";
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
-      setIsMounted(true);
-      console.log("YES")
+    setIsMounted(true);
   }, []);
   if (!isMounted) {
     return null;

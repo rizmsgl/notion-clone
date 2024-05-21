@@ -101,17 +101,21 @@ export const Navigation = () => {
 
   // handle create
   const handleCreate = async () => {
+    const data = {
+      title: "Untitled",
+      parentDocument: null,
+    };
     try {
-      const response = await fetch("/api/documents/document/", {
+      const response = await fetch("/api/documents/document", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title: "Untitled", parentDocument: null }),
+        body: JSON.stringify(data),
       });
       if (!response.ok) throw new Error("Failed to create a new note.");
-      const data = await response.json();
-      const documentId = data._id;
+      const document = await response.json();
+      const documentId = document._id;
       router.push(`/documents/${documentId}`);
       toast({
         title: "New note.",

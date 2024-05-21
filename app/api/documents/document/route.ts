@@ -1,31 +1,35 @@
-import {NextApiResponse, NextApiRequest} from "next";
-import {DocumentModel} from "@/models/DocumentModel";
-import {connectToDB} from "@/utils/database";
-import {auth} from "@clerk/nextjs";
+import { DocumentModel } from "@/models/DocumentModel";
+import { connectToDB } from "@/utils/database";
+import { auth } from "@clerk/nextjs";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse){
-    if (req.method !== 'POST'){
-        return res.status(405).end(); // Method Not Allowed
+export async function POST(req: Request): Promise<Response> {
+  if (req.method !== "POST") {
+    return Response.json({ message: "Method not allowed." }, { status: 405 });
+    // Method Not Allowed
+  }
+  try {
+    const { userId }: { userId: string | null } = auth();
+    if (userId === null) {
+      return Response.json({ message: "Not authenticated." }, { status: 401 });
     }
-    try{
-        const {userId} : {userId: string | null} = auth();
-        if (userId === null){
-            return res.status(401).json({error: 'Not Authenticated.'});
-        }
-        await connectToDB();
-        const {title, parentDocument} = req.body;
-        // Create a new document
-        const document = new DocumentModel({
-            title,
-            parentDocument,
-            userId,
-            isArchived: false,
-            isPublished: false,
-        });
-        await document.save();
-        return res.status(201).json(document);
-    }catch(error){
-        console.error('Error creating document: ', error);
-        return res.status(500).json({error: 'Internal Server Error.'});
-    }
+    await connectToDB();
+    const data = await req.json();
+    const { title, parentDocument } = data;
+    // Create a new document
+    const document = new DocumentModel({
+      title,
+      parentDocument,
+      userId,
+      isArchived: false,
+      isPublished: false,
+    });
+    await document.save();
+    return Response.json(document, { status: 201 });
+  } catch (error) {
+    console.error("Error creating document: ", error);
+    return Response.json(
+      { message: "Internal server error." },
+      { status: 500 }
+    );
+  }
 }

@@ -4,15 +4,12 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Document } from "@/types/document-types";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { File } from "lucide-react";
 type Props = {};
@@ -33,7 +30,7 @@ const SearchCommand = (props: Props) => {
       setIsMounted(true);
     };
     getDocuments();
-  });
+  }, []);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {

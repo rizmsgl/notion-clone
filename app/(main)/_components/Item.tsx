@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 type Props = {
   id?: string;
@@ -45,6 +46,7 @@ export const Item = ({
 }: Props) => {
   const { user } = useUser();
   const router = useRouter();
+  const { toast } = useToast();
   /*
    * const create
    * const archive*/
@@ -66,12 +68,44 @@ export const Item = ({
       .then((response) => response.json())
       .then((document) => {
         if (!expanded) onExpand?.();
-        router.push(`documents/${document._id}`);
+        toast({
+          title: "Creating note...",
+          description: "Note created successfully.",
+        });
+        router.push(`/documents/${document._id}`);
       });
   };
 
   /** onArchive method here */
-  const onArchive = async () => {};
+  const onArchive = async (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    if (!id) return;
+    try {
+      const response = await fetch(`/api/documents/document/${id}/archive`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(id),
+      });
+      if (response.status === 200) {
+        toast({
+          title: "Moving Note...",
+          description: "Note moved successfully to trash.",
+        });
+        router.push("/documents");
+      }
+    } catch (error) {
+      console.error("Error moving document to trash: ", error);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Failed to move note to trash.",
+      });
+    }
+  };
 
   const handleExpand = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>

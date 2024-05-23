@@ -1,24 +1,33 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {DocumentModel} from "@/models/DocumentModel";
-import {connectToDB} from "@/utils/database";
-import {auth} from "@clerk/nextjs";
+import { NextRequest, NextResponse } from "next/server";
+import { DocumentModel } from "@/models/DocumentModel";
+import { connectToDB } from "@/utils/database";
+import { auth } from "@clerk/nextjs";
 
-export default async function handler(req: NextApiRequest, res:NextApiResponse){
-    if (req.method !== 'GET')
-        return res.status(405).end(); // Method Not Allowed
-    try{
-        const {userId}: {userId: string | null} = auth()
-        if (userId === null)
-            return res.status(401).json({error: 'Not Authenticated'});
+export const GET = async (req: NextRequest, res: NextResponse) => {
+  if (req.method !== "GET")
+    return NextResponse.json(
+      { message: "Method not allowed." },
+      { status: 405 }
+    ); // Method Not Allowed
+  try {
+    const { userId }: { userId: string | null } = auth();
+    if (userId === null)
+      return NextResponse.json(
+        { message: "Not Authenticated." },
+        { status: 401 }
+      );
 
-        await connectToDB();
-        const documents = await DocumentModel.find({
-            userId,
-            isArchived: true,
-        }).sort({updatedAt: -1});
-        return res.status(200).json(documents);
-    }catch(error){
-        console.error('Error fetching trashed documents: ', error);
-        res.status(500).json({error: 'Internal Server Error.'});
-    }
-}
+    await connectToDB();
+    const documents = await DocumentModel.find({
+      userId,
+      isArchived: true,
+    }).sort({ updatedAt: -1 });
+    return NextResponse.json(documents, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching trashed documents: ", error);
+    return NextResponse.json(
+      { error: "Internal Server Error." },
+      { status: 500 }
+    );
+  }
+};

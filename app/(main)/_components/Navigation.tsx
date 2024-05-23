@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "./Navbar";
+import TrashBox from "./trash-box";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -161,11 +162,10 @@ export const Navigation = () => {
           <Item label="New Page" icon={PlusIcon} onClick={handleCreate} />
         </div>
         {/* Document List*/}
-        <div className="mt-4">
+        <div className="">
           <DocumentsList />
-          <Item icon={PlusIcon} label="Add a page" />
           <Popover>
-            <PopoverTrigger className="w-full mt-4">
+            <PopoverTrigger className="w-full">
               <Item label="Trash" icon={Trash} />
             </PopoverTrigger>
             <PopoverContent
@@ -173,6 +173,7 @@ export const Navigation = () => {
               side={isMobile ? "bottom" : "right"}
             >
               {/* TrashBox Here*/}
+              <TrashBox />
             </PopoverContent>
           </Popover>
         </div>

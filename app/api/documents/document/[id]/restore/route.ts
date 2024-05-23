@@ -3,36 +3,30 @@ import { DocumentModel } from "@/models/DocumentModel";
 import { connectToDB } from "@/utils/database";
 import { auth } from "@clerk/nextjs";
 
-export const PUT = async (
-  req: NextRequest,
-  res: NextResponse
-): Promise<Response> => {
-  if (req.method !== "PUT") {
+export const PATCH = async (req: NextRequest, res: NextResponse) => {
+  if (req.method !== "PATCH")
     return NextResponse.json(
       { message: "Method not allowed." },
       { status: 405 }
     );
-  }
   try {
     const { userId }: { userId: string | null } = auth();
-    if (userId === null) {
+    if (userId === null)
       return NextResponse.json(
         { message: "Not Authenticated." },
         { status: 401 }
       );
-    }
     await connectToDB();
     const id = await req.json();
     const existingDocument = await DocumentModel.findById(id);
-    if (!existingDocument) {
+    if (!existingDocument)
       return NextResponse.json({ message: "Not Found." }, { status: 404 });
-    }
     if (existingDocument.userId !== userId)
       return NextResponse.json({ message: "Unauthorized." }, { status: 403 });
-    await DocumentModel.findByIdAndUpdate(id, { isArchived: true });
+    await DocumentModel.findByIdAndUpdate(id, { isArchived: false });
 
-    // Recursive archive function to handle children documents
-    const recursiveArchive = async (
+    // recursive restore
+    const recursiveRestore = async (
       documentId: string | string[] | undefined
     ) => {
       const children = await DocumentModel.find({
@@ -40,17 +34,18 @@ export const PUT = async (
         parentDocument: documentId,
       });
       for (const child of children) {
-        await DocumentModel.findByIdAndUpdate(child._id, { isArchived: true });
-        await recursiveArchive(child._id);
+        await DocumentModel.findByIdAndUpdate(child._id, { isArchived: false });
+        await recursiveRestore(child._id);
       }
     };
-    await recursiveArchive(id);
+
+    await recursiveRestore(id);
     return NextResponse.json(
-      { message: "Document Archived Successfully." },
+      { message: "Document Restored Successfully." },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error archiving document:", error);
+    console.error("Error restoring document: ", error);
     return NextResponse.json(
       { error: "Internal Server Error." },
       { status: 500 }

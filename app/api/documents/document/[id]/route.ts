@@ -97,7 +97,7 @@ export const DELETE = async (req: NextRequest, res: NextResponse) => {
       );
     }
     await connectToDB();
-    const { id } = req.query;
+    const id = await req.json();
     const existingDocument = await DocumentModel.findById(id);
     if (!existingDocument)
       return NextResponse.json({ message: "Not Found." }, { status: 404 });

@@ -42,7 +42,7 @@ export const DocumentsList = ({ parentDocumentId, level = 0 }: Props) => {
 
   useEffect(() => {
     fetchData(parentDocumentId);
-  }, [parentDocumentId]);
+  }, [parentDocumentId, params]);
 
   const onExpand = (documentId: string) => {
     setExpanded((prevExpanded) => ({

@@ -34,7 +34,7 @@ export const Menu = ({ documentId }: Props) => {
           body: JSON.stringify(documentId),
         }
       );
-      if (response.status) {
+      if (response.status === 200) {
         toast({
           title: "Moving Note...",
           description: "Note moved successfully to trash.",

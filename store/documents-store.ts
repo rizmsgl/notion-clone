@@ -73,4 +73,11 @@ export const useDocsStore = create<DocumentState>((set) => ({
       console.error("Error fetching trash documents: ", error);
     }
   },
+  deleteDocumentById: (docId: string) =>
+    set((state) => {
+      const updatedDocuments = (state.documents || []).filter(
+        (doc: Document) => doc._id !== docId
+      );
+      return { documents: updatedDocuments };
+    }),
 }));

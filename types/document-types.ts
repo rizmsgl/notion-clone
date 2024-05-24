@@ -20,4 +20,5 @@ export type DocumentState = {
   fetchDocuments: (parentDocumentId?: string) => Promise<void>;
   updateDocumentById: (docId: string, updatedFields: Partial<Document>) => void;
   fetchArchivedDocuments: () => Promise<void>;
+  deleteDocumentById: (docId: string) => void;
 };

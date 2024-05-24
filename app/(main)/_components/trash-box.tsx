@@ -20,6 +20,7 @@ const TrashBox = (props: Props) => {
   const fetchArchivedDocuments = useDocsStore(
     (store) => store.fetchArchivedDocuments
   );
+  const deleteDocumentById = useDocsStore((state) => state.deleteDocumentById);
   useEffect(() => {
     fetchArchivedDocuments();
   });
@@ -64,6 +65,7 @@ const TrashBox = (props: Props) => {
   };
 
   const onRemove = async (documentId: string) => {
+    // TODO: delete documents from app state
     try {
       const response = await fetch(`/api/documents/document/${documentId}`, {
         method: "DELETE",
@@ -77,6 +79,7 @@ const TrashBox = (props: Props) => {
           title: "Deleting note...",
           description: "Note deleted successfully.",
         });
+        deleteDocumentById(documentId);
         if (params.documentId === documentId) {
           router.push("/documents");
         }

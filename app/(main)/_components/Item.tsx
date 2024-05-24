@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import { useDocsStore } from "@/store/documents-store";
 
 type Props = {
   id?: string;
@@ -47,9 +48,7 @@ export const Item = ({
   const { user } = useUser();
   const router = useRouter();
   const { toast } = useToast();
-  /*
-   * const create
-   * const archive*/
+  const updateDocumentById = useDocsStore((state) => state.updateDocumentById);
   /** onCreate method here */
   const onCreate = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -95,6 +94,7 @@ export const Item = ({
           title: "Moving Note...",
           description: "Note moved successfully to trash.",
         });
+        updateDocumentById(id, { isArchived: true });
         router.push("/documents");
       }
     } catch (error) {

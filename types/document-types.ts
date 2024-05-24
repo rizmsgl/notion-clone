@@ -11,3 +11,13 @@ export type Document = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+export type DocumentState = {
+  documents: Document[] | undefined;
+  archivedDocuments: Document[] | undefined;
+  setDocuments: (documents: Document[]) => void;
+  updateDocument: (updatedDocument: Document) => void;
+  fetchDocuments: (parentDocumentId?: string) => Promise<void>;
+  updateDocumentById: (docId: string, updatedFields: Partial<Document>) => void;
+  fetchArchivedDocuments: () => Promise<void>;
+};

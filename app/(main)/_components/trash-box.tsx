@@ -6,6 +6,7 @@ import { Spinner } from "@/components/Spinner";
 import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
+import { useDocsStore } from "@/store/documents-store";
 
 type Props = {};
 
@@ -13,25 +14,15 @@ const TrashBox = (props: Props) => {
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();
-  const [documents, setDocuments] = useState<Document | undefined>(undefined);
+  const documents = useDocsStore((store) => store.archivedDocuments);
   const [search, setSearch] = useState("");
+  const updateDocumentById = useDocsStore((store) => store.updateDocumentById);
+  const fetchArchivedDocuments = useDocsStore(
+    (store) => store.fetchArchivedDocuments
+  );
   useEffect(() => {
-    const getDocuments = async () => {
-      try {
-        const response = await fetch("/api/documents/trash/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const documents = await response.json();
-        setDocuments(documents);
-      } catch (error) {
-        console.error("Error fetching trash documents: ", error);
-      }
-    };
-    getDocuments();
-  }, []);
+    fetchArchivedDocuments();
+  });
   //@ts-ignore
   const filteredDocuments = documents?.filter((document: Document) => {
     return document.title.toLowerCase().includes(search.toLowerCase());
@@ -55,11 +46,13 @@ const TrashBox = (props: Props) => {
           body: JSON.stringify(documentId),
         }
       );
-      if (response.status === 200)
+      if (response.status === 200) {
         toast({
           title: "Restoring note...",
           description: "Note restored successfully.",
         });
+        updateDocumentById(documentId, { isArchived: false });
+      }
     } catch (error) {
       console.error("error restoring document: ", error);
       toast({

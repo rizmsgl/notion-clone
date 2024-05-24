@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Document } from "@/types/document-types";
 import React, { useRef, useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useDocsStore } from "@/store/documents-store";
 
 type Props = {
   initialData: Document;
@@ -12,6 +13,7 @@ export const Title = ({ initialData }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState<string>(initialData.title || "Untitled");
   const [isEditing, setIsEditing] = useState(false);
+  const updateDocument = useDocsStore((state) => state.updateDocument);
 
   useEffect(() => {
     setTitle(initialData.title || "Untitled");
@@ -31,22 +33,27 @@ export const Title = ({ initialData }: Props) => {
     setTitle(event.target.value);
   };
   const onKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
-    const data = {
-      id: initialData._id,
-      title: title || "Untitled",
-    };
-    try {
-      await fetch(`/api/documents/document/${initialData._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-    } catch (error) {
-      console.error("Error updating document title: ", error);
-    }
     if (event.key === "Enter") {
+      const data = {
+        id: initialData._id,
+        title: title || "Untitled",
+      };
+      const updatedDocument: Document = {
+        ...initialData,
+        title: title || "Untitled",
+      };
+      try {
+        await fetch(`/api/documents/document/${initialData._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+      } catch (error) {
+        console.error("Error updating document title: ", error);
+      }
+      updateDocument(updatedDocument);
       disableInput();
     }
   };

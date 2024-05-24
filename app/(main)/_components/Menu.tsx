@@ -8,30 +8,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
+import { useDocsStore } from "@/store/documents-store";
 import { useUser } from "@clerk/nextjs";
 import { MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { Document } from "@/types/document-types";
 
 type Props = {
-  documentId: string;
+  initialData: Document | undefined;
 };
 
-export const Menu = ({ documentId }: Props) => {
+export const Menu = ({ initialData }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const { user } = useUser();
+  const updateDocument = useDocsStore((state) => state.updateDocument);
   // archive
   const onArchive = async () => {
     try {
       const response = await fetch(
-        `/api/documents/document/${documentId}/archive`,
+        `/api/documents/document/${initialData?._id}/archive`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(documentId),
+          body: JSON.stringify(initialData?._id),
         }
       );
       if (response.status === 200) {
@@ -39,6 +42,12 @@ export const Menu = ({ documentId }: Props) => {
           title: "Moving Note...",
           description: "Note moved successfully to trash.",
         });
+        const updatedDocument: Document = {
+          ...initialData,
+          isArchived: true,
+        };
+        updateDocument(updatedDocument);
+
         router.push("/documents");
       }
     } catch (error) {

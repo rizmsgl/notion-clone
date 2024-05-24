@@ -4,6 +4,7 @@ import { Item } from "./Item";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
 import { Document } from "@/types/document-types";
+import { useDocsStore } from "@/store/documents-store";
 
 type Props = {
   parentDocumentId?: string;
@@ -13,36 +14,13 @@ type Props = {
 export const DocumentsList = ({ parentDocumentId, level = 0 }: Props) => {
   const params = useParams();
   const router = useRouter();
-  const [documents, setDocuments] = useState<Document[]>();
+  const documents = useDocsStore((state) => state.documents);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
   const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
-  const fetchData = async (parentDocId?: string) => {
-    const url = parentDocId
-      ? `/api/documents?parentDocument=${encodeURIComponent(parentDocId)}`
-      : "/api/documents";
-
-    try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status !== 200) {
-        throw new Error("Failed to fetch documents.");
-      }
-
-      const data = await response.json();
-      setDocuments(data);
-    } catch (error) {
-      console.error("Error fetching documents: ", error);
-    }
-  };
-
   useEffect(() => {
-    fetchData(parentDocumentId);
-  }, [parentDocumentId, params]);
+    fetchDocuments(parentDocumentId);
+  }, [parentDocumentId, fetchDocuments, params]);
 
   const onExpand = (documentId: string) => {
     setExpanded((prevExpanded) => ({
@@ -69,6 +47,12 @@ export const DocumentsList = ({ parentDocumentId, level = 0 }: Props) => {
     );
   }
 
+  // filter documents by parentDocumentId
+  const filteredDocuments = documents.filter((document) =>
+    parentDocumentId
+      ? document.parentDocument === parentDocumentId && !document.isArchived
+      : !document.parentDocument && !document.isArchived
+  );
   return (
     <>
       <p
@@ -83,7 +67,7 @@ export const DocumentsList = ({ parentDocumentId, level = 0 }: Props) => {
       >
         No pages inside
       </p>
-      {documents.map((document) => (
+      {filteredDocuments.map((document) => (
         <div key={document._id}>
           <Item
             id={document._id}

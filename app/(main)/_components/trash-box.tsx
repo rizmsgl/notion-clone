@@ -2,7 +2,7 @@ import { useRouter, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Document } from "@/types/document-types";
 import { useToast } from "@/components/ui/use-toast";
-import { Spinner } from "@/components/Spinner";
+import { Spinner } from "@/components/spinner";
 import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
@@ -65,7 +65,6 @@ const TrashBox = (props: Props) => {
   };
 
   const onRemove = async (documentId: string) => {
-    // TODO: delete documents from app state
     try {
       const response = await fetch(`/api/documents/document/${documentId}`, {
         method: "DELETE",

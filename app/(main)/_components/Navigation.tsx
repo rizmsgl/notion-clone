@@ -1,22 +1,22 @@
 "use client";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import { useSettings } from "@/hooks/useSettings";
-import { useSearch } from "@/hooks/useSearch";
+import { useSettings } from "@/hooks/use-settings";
+import { useSearch } from "@/hooks/use-search";
 import { useMediaQuery } from "usehooks-ts";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChevronsLeft } from "lucide-react";
-import { User } from "@/app/(main)/_components/User";
-import { Item } from "@/app/(main)/_components/Item";
+import { User } from "@/app/(main)/_components/user";
+import { Item } from "@/app/(main)/_components/item";
 import { MenuIcon, PlusIcon, Search, Settings, Trash } from "lucide-react";
-import { DocumentsList } from "@/app/(main)/_components/DocumentsList";
+import { DocumentsList } from "@/app/(main)/_components/documents-list";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useToast } from "@/components/ui/use-toast";
-import Navbar from "./Navbar";
+import Navbar from "./navbar";
 import TrashBox from "./trash-box";
 
 export const Navigation = () => {

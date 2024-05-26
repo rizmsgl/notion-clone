@@ -2,16 +2,16 @@
 import { SignInButton, useUser, UserButton } from "@clerk/nextjs";
 import { useScrollTop } from "@/hooks/useScrollTop";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/app/(marketing)/_components/Logo";
+import { Logo } from "@/app/(marketing)/_components/logo";
 import {
   HamburgerMenuIcon,
   PersonIcon,
   ReloadIcon,
 } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
-import { ThemeSelector } from "@/components/ThemeSelector";
+import { ThemeSelector } from "@/components/theme-selector";
 import Link from "next/link";
-import { SmallScreenMenu } from "@/components/SmallScreenMenu";
+import { SmallScreenMenu } from "@/components/small-screen-menu";
 import { useState } from "react";
 
 export const Navbar = () => {

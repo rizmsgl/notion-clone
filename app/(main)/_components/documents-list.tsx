@@ -1,6 +1,6 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Item } from "./Item";
+import { Item } from "./item";
 import { cn } from "@/lib/utils";
 import { FileIcon } from "lucide-react";
 import { Document } from "@/types/document-types";

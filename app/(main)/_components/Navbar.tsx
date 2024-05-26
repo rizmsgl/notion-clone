@@ -2,10 +2,10 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Document } from "@/types/document-types";
 import { MenuIcon } from "lucide-react";
-import { Title } from "./Title";
-import { Menu } from "./Menu";
-import Banner from "./Banner";
-import Publish from "./Publish";
+import { Title } from "./title";
+import { Menu } from "./menu";
+import Banner from "./banner";
+import Publish from "./publish";
 
 type Props = {
   isCollapsed: boolean;

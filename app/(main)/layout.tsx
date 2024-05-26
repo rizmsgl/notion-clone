@@ -1,10 +1,10 @@
 "use client";
 import { useUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { Navigation } from "@/app/(main)/_components/Navigation";
+import { Navigation } from "@/app/(main)/_components/navigation";
 import { Toaster } from "@/components/ui/toaster";
-import { Spinner } from "@/components/Spinner";
-import SearchCommand from "@/components/SearchCommand";
+import { Spinner } from "@/components/spinner";
+import SearchCommand from "@/components/search-command";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const { isLoaded, isSignedIn } = useUser();

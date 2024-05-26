@@ -1,8 +1,8 @@
 "use client";
-import { useSettings } from "@/hooks/useSettings";
+import { useSettings } from "@/hooks/use-settings";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Label } from "../ui/label";
-import { ThemeSelector } from "../ThemeSelector";
+import { ThemeSelector } from "../theme-selector";
 
 type Props = {};
 

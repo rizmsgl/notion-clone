@@ -1,6 +1,6 @@
 "use client";
 import { SignInButton, useUser, UserButton } from "@clerk/nextjs";
-import { useScrollTop } from "@/hooks/useScrollTop";
+import { useScrollTop } from "@/hooks/use-scroll-top";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/app/(marketing)/_components/logo";
 import {

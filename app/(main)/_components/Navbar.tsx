@@ -1,11 +1,12 @@
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Document } from "@/types/document-types";
 import { MenuIcon } from "lucide-react";
 import { Title } from "./title";
 import { Menu } from "./menu";
 import Banner from "./banner";
 import Publish from "./publish";
+import { useDocsStore } from "@/store/documents-store";
+import { Document } from "@/types/document-types";
 
 type Props = {
   isCollapsed: boolean;
@@ -14,25 +15,13 @@ type Props = {
 
 const Navbar = ({ isCollapsed, onResetWidth }: Props) => {
   const params = useParams();
-  const [document, setDocument] = useState<Document | undefined | null>(
-    undefined
-  );
+  const documents = useDocsStore((state) => state.documents);
+  const [document, setDocument] = useState<Document | undefined>(undefined);
   useEffect(() => {
-    const getDocument = async () => {
-      const response = await fetch(
-        `/api/documents/document/${params.documentId}?documentId=${params.documentId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const document = await response.json();
-      setDocument(document);
-    };
-    getDocument();
-  }, [params.documentId]);
+    const documentId = params?.documentId;
+    const document = documents?.find((doc) => doc._id === documentId);
+    setDocument(document);
+  }, [params, documents]);
   if (document == null) return null;
   if (document === undefined) {
     return (

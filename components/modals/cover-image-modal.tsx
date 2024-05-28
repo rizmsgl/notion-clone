@@ -1,9 +1,12 @@
+"use client";
 import { useCoverImage } from "@/hooks/use-cover-image";
 import { useEdgeStore } from "@/lib/edgestore";
 import { useParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { SingleImageDropzone } from "../image-dropzone";
+import { useDocsStore } from "@/store/documents-store";
+import { Document } from "@/types/document-types";
 
 type Props = {};
 
@@ -13,9 +16,23 @@ const CoverImageModal = (props: Props) => {
   const coverImage = useCoverImage();
   const [file, setFile] = useState<File>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const documents = useDocsStore((state) => state.documents);
+  const [document, setDocument] = useState<Document | undefined>(undefined);
+  const updateDocument = useDocsStore((state) => state.updateDocument);
+
+  useEffect(() => {
+    const documentId = params?.documentId;
+    const document = documents?.find((doc) => doc._id === documentId);
+    setDocument(document);
+  }, [params, documents]);
 
   const update = async (imageUrl: string) => {
     const documentId = params.documentId;
+    //@ts-ignore
+    const updatedDocument: Document = {
+      ...document,
+      coverImage: imageUrl,
+    };
     try {
       const response = await fetch(`/api/documents/document/${documentId}`, {
         method: "PUT",
@@ -25,6 +42,7 @@ const CoverImageModal = (props: Props) => {
         body: JSON.stringify({ id: documentId, coverImage: imageUrl }),
       });
       if (response.status === 200) {
+        updateDocument(updatedDocument);
         console.log("Cover image updated successfully.");
       }
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Document, DocumentState } from "@/types/document-types";
 import { create } from "zustand";
 
-export const useDocsStore = create<DocumentState>((set) => ({
+export const useDocsStore = create<DocumentState>((set, get) => ({
   documents: undefined as Document[] | undefined,
   archivedDocuments: undefined as Document[] | undefined,
   setDocuments: (documents: Document[]) => set({ documents }),

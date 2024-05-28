@@ -24,9 +24,21 @@ const SearchCommand = (props: Props) => {
   const onClose = useSearch((store) => store.onClose);
   useEffect(() => {
     const getDocuments = async () => {
-      const response = await fetch("api/documents");
-      const documents = await response.json();
-      setDocuments(documents);
+      try {
+        const response = await fetch("/api/documents", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.status === 200) {
+          const documents = await response.json();
+          setDocuments(documents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch search box documents: ", error);
+      }
+
       setIsMounted(true);
     };
     getDocuments();

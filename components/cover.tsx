@@ -26,12 +26,13 @@ export const Cover = ({ url, preview }: Props) => {
     }
     try {
       const response = await fetch(
-        `/api/documents/document/${documentId}/remove`,
+        `/api/documents/document/${documentId}/image`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(documentId),
         }
       );
       if (response.status === 200) {

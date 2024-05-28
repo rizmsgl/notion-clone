@@ -13,19 +13,20 @@ export const PATCH = async (req: NextRequest, res: NextResponse) => {
     const { userId }: { userId: string | null } = auth();
     if (userId === null)
       return NextResponse.json(
-        { message: "Not Authenticated." },
+        { message: "Not authenticated." },
         { status: 401 }
       );
     await connectToDB();
     const id = await req.json();
+    console.log(id);
     const existingDocument = await DocumentModel.findById(id);
     if (!existingDocument)
-      return NextResponse.json({ message: "Not Found." }, { status: 404 });
+      return NextResponse.json({ message: "Not found." }, { status: 404 });
     if (existingDocument.userId !== userId)
       NextResponse.json({ message: "Unauthorized." }, { status: 403 });
-    await DocumentModel.findByIdAndUpdate(id, { coverImage: undefined });
+    await DocumentModel.findByIdAndUpdate(id, { coverImage: "" });
     return NextResponse.json(
-      { message: "Cover Image Removed Successfully." },
+      { message: "Cover image removed successfully." },
       { status: 200 }
     );
   } catch (error) {

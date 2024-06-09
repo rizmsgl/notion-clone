@@ -55,6 +55,7 @@ export const PUT = async (req: NextRequest, res: NextResponse) => {
     await connectToDB();
     const body = await req.json();
     const { id, ...rest } = body;
+    console.log(body)
     const existingDocument = await DocumentModel.findById(id);
     if (!existingDocument) {
       return NextResponse.json({ message: "Not Found." }, { status: 404 });

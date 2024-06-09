@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocsStore } from "@/store/documents-store";
 import { useUser } from "@clerk/nextjs";
-import { MoreHorizontal, Trash } from "lucide-react";
+import { MoreHorizontal, Save, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Document } from "@/types/document-types";
@@ -24,6 +24,7 @@ export const Menu = ({ initialData }: Props) => {
   const router = useRouter();
   const { user } = useUser();
   const updateDocument = useDocsStore((state) => state.updateDocument);
+  const documents = useDocsStore((state) => state.documents);
   // archive
   const onArchive = async () => {
     try {
@@ -42,6 +43,7 @@ export const Menu = ({ initialData }: Props) => {
           title: "Moving Note...",
           description: "Note moved successfully to trash.",
         });
+        //@ts-ignore
         const updatedDocument: Document = {
           ...initialData,
           isArchived: true,
@@ -60,6 +62,36 @@ export const Menu = ({ initialData }: Props) => {
     }
   };
 
+  const onSaveChanges = async () => {
+    const document = documents?.filter((document) => 
+      document._id === initialData?._id)
+    if (document === undefined) {
+      throw new TypeError('No Document was found with the given ID.');
+    }
+    try{
+      const response = await fetch(
+        `/api/documents/document/${initialData?._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: initialData?._id, ...document}),
+        }
+      );
+      if (response.status === 200) {
+        toast({
+          title: "Saving Changes...",
+          description: "Changes saved successfully.",
+        });
+        updateDocument(document[0]);
+        console.log("Document changes saved successfully.");
+      }
+    }catch(error){
+      console.error("Error saving document changes: ", error);
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -76,6 +108,10 @@ export const Menu = ({ initialData }: Props) => {
         <DropdownMenuItem onClick={onArchive}>
           <Trash className="h-4 w-4 mr-2" />
           Delete
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={onSaveChanges}>
+          <Save className="h-4 w-4 mr-2" />
+          Save Changes
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <div className="text-xs text-muted-foreground p-2">

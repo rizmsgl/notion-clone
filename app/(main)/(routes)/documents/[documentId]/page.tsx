@@ -27,7 +27,6 @@ const DocumentIdPage = ({ params }: Props) => {
     []
   );
   const onChange = async (content: string) => {
-    console.log(content);
     //@ts-ignore
     const updatedDocument: Document = { ...document, content: content };
     try {
@@ -70,7 +69,7 @@ const DocumentIdPage = ({ params }: Props) => {
       <Cover document={document} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
-        <Editor initialContent={document.content} onChange={onChange} />
+        <Editor initialContent={document} onChange={onChange}/>
       </div>
     </div>
   );

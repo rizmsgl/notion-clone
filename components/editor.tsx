@@ -8,22 +8,25 @@ import { useTheme } from "next-themes";
 import { useEdgeStore } from "@/lib/edgestore";
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
 import { debounce } from "lodash";
+import { useDocsStore } from "@/store/documents-store";
+import { Document } from "@/types/document-types";
 type Props = {
   onChange: (value: string) => void;
-  initialContent?: string;
+  initialContent?: Document;
   editable?: boolean;
 };
 
 const Editor = ({ onChange, initialContent, editable }: Props) => {
   const { resolvedTheme } = useTheme();
   const { edgestore } = useEdgeStore();
+  const updateDocument = useDocsStore((state) => state.updateDocument);
   const handleUpload = async (file: File) => {
     const response = await edgestore.publicFiles.upload({ file });
     return response.url;
   };
   const editor: BlockNoteEditor = useCreateBlockNote({
-    initialContent: initialContent
-      ? (JSON.parse(initialContent) as PartialBlock[])
+    initialContent: initialContent?.content
+      ? (JSON.parse(initialContent?.content) as PartialBlock[])
       : undefined,
     uploadFile: handleUpload,
   });
@@ -33,18 +36,25 @@ const Editor = ({ onChange, initialContent, editable }: Props) => {
   const delayOnChange = useCallback(
     debounce(() => {
       onChange(JSON.stringify(editor.document));
-    }, 5000), // delay 5s
+    }, 15000), // delay 15s
     [editor, onChange]
   );
 
   const onEditorContentChange = useCallback(() => {
+    //@ts-ignore
+    const updatedDocument: Document = {
+      ...initialContent,
+      content: JSON.stringify(editor.document),
+    };
+    console.log(updatedDocument)
+    updateDocument(updatedDocument);
     delayOnChange();
-  }, [delayOnChange]);
+  }, [delayOnChange, editor.document, updateDocument, initialContent]);
 
-  // Auto-save every 10 seconds
+  // Auto-save every 15 seconds
 
   useEffect(() => {
-    const interval = setInterval(onEditorContentChange, 10000);
+    const interval = setInterval(onEditorContentChange, 15000);
     return () => clearInterval(interval);
   }, [onEditorContentChange]);
 

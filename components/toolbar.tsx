@@ -24,6 +24,29 @@ const Toolbar = ({ initialData, preview }: Props) => {
     setValue(initialData.title || "Untitled");
   }, [initialData.title, setValue]);
 
+  // update document through api
+
+  const patchDocument = async(updatedDocument: Document) => {
+    try{
+      const response = await fetch(
+        `/api/documents/document/${initialData._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: initialData._id, ...updatedDocument}),
+        }
+      );
+      if (response.status === 200) {
+        updateDocument(updatedDocument);
+        console.log("Document title updated successfully.");
+      }
+    }catch(error){
+      console.error("Error updating document: ", error)
+    }
+  }
+
   // enable input
   const enableInput = () => {
     if (preview) return;
@@ -49,33 +72,41 @@ const Toolbar = ({ initialData, preview }: Props) => {
         title: value || "Untitled",
       };
       event.preventDefault();
-      try {
-        const response = await fetch(
-          `/api/documents/document/${initialData._id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: initialData._id, title: value }),
-          }
-        );
-        if (response.status === 200) {
-          updateDocument(updatedDocument);
-          console.log("Document title updated successfully.");
-        }
-      } catch (error) {
-        console.error("Error updating document title: ", error);
-      }
+      await patchDocument(updatedDocument);
       disableInput();
     }
   };
 
-  const onIconSelect = (icon: string) => {
-    // update icon
+  const onIconSelect = async (icon: string) => {
+    const updatedDocument: Document ={
+      ...initialData,
+      icon,
+    }
+    await patchDocument(updatedDocument);
   };
-  const onRemoveIcon = () => {
+  const onRemoveIcon = async () => {
+    const updatedDocument: Document = {
+      ...initialData,
+      icon: "",
+    };
     // remove icon
+    try{
+      const response = await fetch(`/api/documents/document/${initialData._id}/icon`,
+        {
+          method: 'PATCH',
+          headers:{
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: initialData._id}),
+        }
+      )
+      if (response.status === 200){
+        updateDocument(updatedDocument);
+        console.log("Icon removed successfully.");
+      }
+    }catch(error){
+      console.error("Error removing icon: ", error)
+    }
   };
   // remove icon
 
@@ -83,7 +114,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
     <div className="pl-[54px] group relative">
       {!!initialData.icon && !preview && (
         <div className="flex items-center gap-x-2 group/icon pt-6">
-          <IconPicker>
+          <IconPicker onChange={onIconSelect}>
             <p className="text-6xl hover:opacity-75 transition">
               {initialData.icon}
             </p>
@@ -92,6 +123,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
             className="rounded-full opacity-0 group-hover/icon:opacity-100 transition text-muted-foreground text-xs"
             variant="outline"
             size="icon"
+            onClick={onRemoveIcon}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -102,7 +134,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
       )}
       <div className="opacity-0 group-hover:opacity-100 flex items-center gap-x-1 py-4">
         {!initialData.icon && !preview && (
-          <IconPicker asChild>
+          <IconPicker asChild onChange={onIconSelect}>
             <Button
               className="text-muted-foreground text-xs"
               variant="outline"

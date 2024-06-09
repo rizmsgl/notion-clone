@@ -16,6 +16,7 @@ type Props = {
 const DocumentIdPage = ({ params }: Props) => {
   const documents = useDocsStore((state) => state.documents);
   const [document, setDocument] = useState<Document | undefined>(undefined);
+  const updateDocument = useDocsStore((state) => state.updateDocument);
   useEffect(() => {
     const documentId = params?.documentId;
     const document = documents?.find((doc) => doc._id === documentId);
@@ -25,7 +26,27 @@ const DocumentIdPage = ({ params }: Props) => {
     () => dynamic(() => import("@/components/editor"), { ssr: false }),
     []
   );
-  const onChange = () => {};
+  const onChange = async (content: string) => {
+    console.log(content);
+    //@ts-ignore
+    const updatedDocument: Document = { ...document, content: content };
+    try {
+      const response = await fetch(`/api/documents/document/${document?._id}`, {
+        method: 'PUT',
+        headers:{
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: document?._id, content})
+      })
+      if (response.status === 200){
+        updateDocument(updatedDocument)
+        console.log("Document content updated successfully.")
+      }
+    }catch(error){
+      console.error("Error updating document content: ", error)
+    }
+    
+  };
   if (document === undefined) {
     return (
       <div>

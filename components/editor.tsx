@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -7,6 +7,7 @@ import "@blocknote/mantine/style.css";
 import { useTheme } from "next-themes";
 import { useEdgeStore } from "@/lib/edgestore";
 import { BlockNoteEditor, PartialBlock } from "@blocknote/core";
+import { debounce } from "lodash";
 type Props = {
   onChange: (value: string) => void;
   initialContent?: string;
@@ -26,10 +27,27 @@ const Editor = ({ onChange, initialContent, editable }: Props) => {
       : undefined,
     uploadFile: handleUpload,
   });
-  const onEditorContentChange = () => {
-    console.log(editor.document);
-    //onChange(JSON.stringify(editor.topLevelBlocks, null, 2));
-  };
+
+  // delay the onChange function
+
+  const delayOnChange = useCallback(
+    debounce(() => {
+      onChange(JSON.stringify(editor.document));
+    }, 5000), // delay 5s
+    [editor, onChange]
+  );
+
+  const onEditorContentChange = useCallback(() => {
+    delayOnChange();
+  }, [delayOnChange]);
+
+  // Auto-save every 10 seconds
+
+  useEffect(() => {
+    const interval = setInterval(onEditorContentChange, 10000);
+    return () => clearInterval(interval);
+  }, [onEditorContentChange]);
+
   return (
     <div>
       <BlockNoteView

@@ -14,9 +14,10 @@ import { useDocsStore } from "@/store/documents-store";
 type Props = {
   document: Document | undefined;
   preview?: boolean;
+  className?: string;
 };
 
-export const Cover = ({ preview, document }: Props) => {
+export const Cover = ({ preview, document, className }: Props) => {
   const { edgestore } = useEdgeStore();
   const params = useParams();
   const coverImage = useCoverImage();
@@ -60,7 +61,8 @@ export const Cover = ({ preview, document }: Props) => {
       className={cn(
         "relative mt-[3.5rem] w-full h-[35vh] group",
         !document?.coverImage && "h-[12vh]",
-        document?.coverImage && "bg-muted"
+        document?.coverImage && "bg-muted",
+        className
       )}
     >
       {!!document?.coverImage && (

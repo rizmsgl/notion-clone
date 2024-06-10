@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { DocumentModel } from "@/models/DocumentModel";
 import { connectToDB } from "@/utils/database";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 export const PUT = async (
   req: NextRequest,

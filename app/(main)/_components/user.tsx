@@ -1,7 +1,5 @@
 "use client";
 
-import { useUser, SignOutButton } from "@clerk/clerk-react";
-
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TokensIcon } from "@radix-ui/react-icons";
+import { useUser, SignOutButton } from "@clerk/nextjs";
 
 export const User = () => {
   const { user } = useUser();
@@ -61,7 +60,7 @@ export const User = () => {
           asChild
           className="w-full cursor-pointer text-muted-foreground"
         >
-          <SignOutButton>Log out</SignOutButton>
+          <SignOutButton redirectUrl="/">Log Out</SignOutButton>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

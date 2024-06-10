@@ -1,6 +1,6 @@
 import { DocumentModel } from "@/models/DocumentModel";
 import { connectToDB } from "@/utils/database";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request): Promise<Response> {
   if (req.method !== "POST") {

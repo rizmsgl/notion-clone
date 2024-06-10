@@ -1,6 +1,6 @@
 import { DocumentModel } from "@/models/DocumentModel";
 import { connectToDB } from "@/utils/database";
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, res: NextResponse) => {
@@ -11,20 +11,11 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
     );
   }
   try {
-    const { userId }: { userId: string | null } = auth();
-    if (userId === null) {
-      return NextResponse.json(
-        { message: "Not Authenticated." },
-        { status: 401 }
-      );
-    }
     await connectToDB();
     const id = req.nextUrl.searchParams.get("documentId");
     const document = await DocumentModel.findById(id);
     if (!document)
       return NextResponse.json({ message: "Not Found." }, { status: 404 });
-    if (document.userId !== userId)
-      return NextResponse.json({ message: "Unauthorized." }, { status: 403 });
     if (document.isPublished && !document.isArchived)
       return NextResponse.json(document, { status: 200 });
     return NextResponse.json(document, { status: 200 });

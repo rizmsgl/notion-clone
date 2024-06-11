@@ -19,7 +19,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
   const coverImage = useCoverImage();
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentState = useDocsStore((state) => state.updateDocument);
 
   useEffect(() => {
     setValue(initialData.title || "Untitled");
@@ -29,7 +29,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
 
   const patchDocument = async(updatedDocument: Document) => {
     await updateDocument(updatedDocument, updatedDocument._id)
-    await fetchDocuments()
+    updateDocumentState(updatedDocument)
   }
 
   // enable input
@@ -68,6 +68,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
       icon,
     }
     await patchDocument(updatedDocument);
+    updateDocumentState(updatedDocument)
   };
   const onRemoveIcon = async () => {
     const updatedDocument: Document = {
@@ -76,7 +77,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
     };
     // remove icon
     await updateDocument(updatedDocument, updatedDocument._id);
-    await fetchDocuments()
+    updateDocumentState(updatedDocument)
   };
   // remove icon
 

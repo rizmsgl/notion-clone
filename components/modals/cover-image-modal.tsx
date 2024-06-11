@@ -19,7 +19,7 @@ const CoverImageModal = (props: Props) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const documents = useDocsStore((state) => state.documents);
   const [document, setDocument] = useState<Document | undefined>(undefined);
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentState = useDocsStore((state) => state.updateDocument);
 
   useEffect(() => {
     const documentId = params?.documentId;
@@ -35,7 +35,7 @@ const CoverImageModal = (props: Props) => {
       coverImage: imageUrl,
     };
     await updateDocument(updatedDocument, documentId as string);
-    await fetchDocuments();
+    updateDocumentState(updatedDocument)
   };
 
   const onClose = () => {

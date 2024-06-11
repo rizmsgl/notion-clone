@@ -19,7 +19,7 @@ type Props = {
 const Publish = ({ initialData }: Props) => {
   const origin = useOrigin();
   const { toast } = useToast();
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocument = useDocsStore((state) => state.updateDocument);
   const [copied, setCopied] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -30,7 +30,7 @@ const Publish = ({ initialData }: Props) => {
     fireConfetti();
     const updatedDocument = { ...initialData, isPublished: true };
     await publishDocument(updatedDocument, toast);
-    await fetchDocuments();
+    updateDocument(updatedDocument)
     setIsUpdating(false);
   };
 
@@ -38,7 +38,7 @@ const Publish = ({ initialData }: Props) => {
     setIsUpdating(true);
     const updatedDocument = { ...initialData, isPublished: false };
     await unPublishDocument(updatedDocument, toast);
-    await fetchDocuments();
+    updateDocument(updatedDocument);
     setIsUpdating(false);
   };
 

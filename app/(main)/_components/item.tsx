@@ -49,7 +49,7 @@ export const Item = ({
   const { user } = useUser();
   const router = useRouter();
   const { toast } = useToast();
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentById = useDocsStore((state) => state.updateDocumentById);
   /** onCreate method here */
   const onCreate = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -83,7 +83,7 @@ export const Item = ({
     event.stopPropagation();
     if (!id) return;
     await archiveDocument(id, router, toast);
-    await fetchDocuments();
+    updateDocumentById(id, { isArchived: true });
   };
 
   const handleExpand = (

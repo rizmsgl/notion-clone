@@ -22,7 +22,7 @@ export const Cover = ({ preview, document, className }: Props) => {
   const { edgestore } = useEdgeStore();
   const params = useParams();
   const coverImage = useCoverImage();
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentById = useDocsStore((state) => state.updateDocumentById);
 
   // remove cover image
   const removeCover = async () => {
@@ -34,7 +34,7 @@ export const Cover = ({ preview, document, className }: Props) => {
       });
     }
     await removeCoverImage(documentId as string);
-    await fetchDocuments()
+    updateDocumentById(documentId as string, { coverImage: "" });
 
   };
 

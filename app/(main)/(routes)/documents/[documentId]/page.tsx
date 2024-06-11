@@ -17,7 +17,7 @@ type Props = {
 const DocumentIdPage = ({ params }: Props) => {
   const documents = useDocsStore((state) => state.documents);
   const [document, setDocument] = useState<Document | undefined>(undefined);
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateStateDocuments = useDocsStore((state) => state.updateDocument);
   useEffect(() => {
     const documentId = params?.documentId;
     const document = documents?.find((doc) => doc._id === documentId);
@@ -31,7 +31,7 @@ const DocumentIdPage = ({ params }: Props) => {
     //@ts-ignore
     const updatedDocument: Document = { ...document, content: content };
     await updateDocument(updatedDocument, document?._id as string);
-    fetchDocuments();
+    updateStateDocuments(updatedDocument);
     
   };
   if (document === undefined) {

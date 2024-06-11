@@ -14,7 +14,7 @@ export const Title = ({ initialData }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState<string>(initialData.title || "Untitled");
   const [isEditing, setIsEditing] = useState(false);
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentState = useDocsStore((state) => state.updateDocument);
 
   useEffect(() => {
     setTitle(initialData.title || "Untitled");
@@ -44,8 +44,8 @@ export const Title = ({ initialData }: Props) => {
         title: title || "Untitled",
       };
       await updateDocument(updatedDocument, initialData._id);
+      updateDocumentState(updatedDocument);
       disableInput();
-      await fetchDocuments()
     }
   };
   return (

@@ -36,7 +36,6 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments)
 
   // useEffect for side navigation and top navbar
   useEffect(() => {
@@ -110,7 +109,6 @@ export const Navigation = () => {
       parentDocument: null,
     };
     await createDocument(data, router, toast);
-    await fetchDocuments()
   };
 
   return (

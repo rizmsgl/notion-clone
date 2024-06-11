@@ -25,12 +25,13 @@ export const Menu = ({ initialData }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const { user } = useUser();
-  const fetchDocuments= useDocsStore((state) => state.fetchDocuments);
+  const updateDocumentById= useDocsStore((state) => state.updateDocumentById);
+  const updateDocumentState = useDocsStore((state) => state.updateDocument);
   const documents = useDocsStore((state) => state.documents);
   // archive
   const onArchive = async () => {
     await archiveDocument(initialData?._id as string, router, toast);
-    await fetchDocuments()
+    updateDocumentById(initialData?._id as string, { isArchived: true })
   };
 
   const onSaveChanges = async () => {
@@ -40,7 +41,7 @@ export const Menu = ({ initialData }: Props) => {
       throw new TypeError('No Document was found with the given ID.');
     }
     await updateDocument(document[0], initialData?._id as string);
-    await fetchDocuments()
+    updateDocumentState(document[0])
   }
 
   return (

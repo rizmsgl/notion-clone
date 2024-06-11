@@ -20,7 +20,7 @@ const DocumentIdPage = ({ params }: Props) => {
     []
   );
   const [document, setDocument] = useState<Document | undefined>(undefined);
-  const fetchDocuments = useDocsStore((state) => state.fetchDocuments)
+  const updateDocumentState = useDocsStore((state) => state.updateDocument)
 
   const getDocument = async () =>{
     try{
@@ -50,7 +50,7 @@ const DocumentIdPage = ({ params }: Props) => {
       content: content,
     }
     await updateDocument(updatedDocument as Document, document?._id as string);
-    await fetchDocuments()
+    updateDocumentState(updatedDocument as Document)
   }
   if (document === undefined) {
     return (

@@ -16,11 +16,12 @@ const TrashBox = (props: Props) => {
   const router = useRouter();
   const params = useParams();
   const { toast } = useToast();
-  const documents = useDocsStore((store) => store.archivedDocuments);
+  const documents = useDocsStore((state) => state.archivedDocuments);
   const [search, setSearch] = useState("");
-  const fetchDocuments = useDocsStore((store) => store.fetchDocuments);
+  const updateDocumentById = useDocsStore((state) => state.updateDocumentById);
+  const deleteDocumentById = useDocsStore((state) => state.deleteDocumentById)
   const fetchArchivedDocuments = useDocsStore(
-    (store) => store.fetchArchivedDocuments
+    (state) => state.fetchArchivedDocuments
   );
   useEffect(() => {
     fetchArchivedDocuments();
@@ -38,12 +39,12 @@ const TrashBox = (props: Props) => {
   ) => {
     event.stopPropagation();
     await restoreDocument(documentId, toast);
-    await fetchDocuments()
+    updateDocumentById(documentId, { isArchived: false });
   };
 
   const onRemove = async (documentId: string) => {
     await deleteDocument(documentId, router, toast);
-    await fetchDocuments()
+    deleteDocumentById(documentId);
   };
 
   if (documents === undefined) {

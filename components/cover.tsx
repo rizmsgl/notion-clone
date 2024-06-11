@@ -4,7 +4,7 @@ import { useEdgeStore } from "@/lib/edgestore";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { MouseEventHandler } from "react";
 import { Button } from "./ui/button";
 import { ImageIcon, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,9 +35,13 @@ export const Cover = ({ preview, document, className }: Props) => {
     }
     await removeCoverImage(documentId as string);
     updateDocumentById(documentId as string, { coverImage: "" });
-
   };
 
+  // update cover image
+  const updateCover= (url: string)=> {
+    coverImage.onReplace(document?.coverImage as string);
+    updateDocumentById(params.documentId as string, { coverImage: url });
+  };
   return (
     <div
       className={cn(
@@ -58,7 +62,8 @@ export const Cover = ({ preview, document, className }: Props) => {
       {document?.coverImage && !preview && (
         <div className="opacity-0 group-hover:opacity-100 absolute bottom-5 right-5 flex items-center gap-x-2">
           <Button
-            onClick={() => coverImage.onReplace(document?.coverImage as string)}
+          //@ts-ignore
+            onClick={updateCover}
             className="text-muted-foreground text-xs"
             variant="outline"
             size="sm"

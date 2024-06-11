@@ -19,8 +19,8 @@ export const Hero = () => {
   return (
     <div className="bg-background dark:bg-darkBackground max-md:py-[100px]">
       <div
-        className="grid z-10 h-[860px] w-full max-w-[1100px]
-            mx-auto py-0 px-[24px]justify-center"
+        className="grid z-10 h-[760px] w-full max-w-[1100px]
+            mx-auto py-0 px-[24px] justify-center"
       >
         <div className="grid grid-cols-2 max-md:grid-cols-1 items-center">
           <div className="mb-[15px] py-0 px-[15px]">

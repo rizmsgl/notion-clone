@@ -1,5 +1,3 @@
-"use client";
-
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,13 +12,13 @@ import { useRouter } from "next/navigation";
 
 export const User = () => {
   const { user } = useUser();
-  const {signOut} = useClerk();
-  const router = useRouter();
-
+  const { signOut } = useClerk();
+  const router = useRouter()
   const handleSignOut = async () => {
+    router.push("/")
     await signOut();
-    router.push("/"); // Specify the redirect URL here
   };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -65,7 +63,7 @@ export const User = () => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           asChild
-          className="w-full cursor-pointer text-muted-foreground"
+          className="w-full cursor-pointer text-muted-foreground z-50"
         >
           <span onClick={handleSignOut}>Log out</span>
         </DropdownMenuItem>

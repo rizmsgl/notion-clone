@@ -9,11 +9,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TokensIcon } from "@radix-ui/react-icons";
-import { useUser, SignOutButton } from "@clerk/nextjs";
+import { useUser, useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export const User = () => {
   const { user } = useUser();
+  const {signOut} = useClerk();
+  const router = useRouter();
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push("/"); // Specify the redirect URL here
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -60,7 +67,7 @@ export const User = () => {
           asChild
           className="w-full cursor-pointer text-muted-foreground"
         >
-          <SignOutButton redirectUrl="/">Log Out</SignOutButton>
+          <span onClick={handleSignOut}>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

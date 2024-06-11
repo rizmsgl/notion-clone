@@ -17,9 +17,9 @@ export const Hero = () => {
     setHovered(!hovered);
   };
   return (
-    <div className="bg-background dark:bg-darkBackground max-md:py-[100px]">
+    <div className="relative bg-background dark:bg-darkBackground">
       <div
-        className="grid z-10 h-[760px] w-full max-w-[1100px]
+        className="grid h-[760px] max-sm:h-[660px] w-full max-w-[1100px]
             mx-auto py-0 px-[24px] justify-center"
       >
         <div className="grid grid-cols-2 max-md:grid-cols-1 items-center">
@@ -83,7 +83,7 @@ export const Hero = () => {
             </div>
           </div>
           <div
-            className="mb-[15px] px-[15px] h-[600px] max-md:h-[450px] bg-stone-100
+            className="mb-[15px] px-[15px] h-[600px] max-sm:h-[250px] max-md:h-[450px] bg-stone-100
                     rounded-xl py-5 max-md:ml-3 max-lg:mr-3 shadow-sm drop-shadow-sm max-w-[540px] flex
                     items-center justify-center"
           >

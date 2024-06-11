@@ -4,6 +4,7 @@ import { Document } from "@/types/document-types";
 import React, { useRef, useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDocsStore } from "@/store/documents-store";
+import updateDocument from "@/actions/update-document";
 
 type Props = {
   initialData: Document;
@@ -13,7 +14,7 @@ export const Title = ({ initialData }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState<string>(initialData.title || "Untitled");
   const [isEditing, setIsEditing] = useState(false);
-  const updateDocument = useDocsStore((state) => state.updateDocument);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
 
   useEffect(() => {
     setTitle(initialData.title || "Untitled");
@@ -42,19 +43,9 @@ export const Title = ({ initialData }: Props) => {
         ...initialData,
         title: title || "Untitled",
       };
-      try {
-        await fetch(`/api/documents/document/${initialData._id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-      } catch (error) {
-        console.error("Error updating document title: ", error);
-      }
-      updateDocument(updatedDocument);
+      await updateDocument(updatedDocument, initialData._id);
       disableInput();
+      await fetchDocuments()
     }
   };
   return (

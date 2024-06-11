@@ -7,6 +7,8 @@ import { Search, Trash, Undo } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { useDocsStore } from "@/store/documents-store";
+import restoreDocument from "@/actions/restore-document";
+import deleteDocument from "@/actions/delete-document";
 
 type Props = {};
 
@@ -16,11 +18,10 @@ const TrashBox = (props: Props) => {
   const { toast } = useToast();
   const documents = useDocsStore((store) => store.archivedDocuments);
   const [search, setSearch] = useState("");
-  const updateDocumentById = useDocsStore((store) => store.updateDocumentById);
+  const fetchDocuments = useDocsStore((store) => store.fetchDocuments);
   const fetchArchivedDocuments = useDocsStore(
     (store) => store.fetchArchivedDocuments
   );
-  const deleteDocumentById = useDocsStore((state) => state.deleteDocumentById);
   useEffect(() => {
     fetchArchivedDocuments();
   });
@@ -36,61 +37,13 @@ const TrashBox = (props: Props) => {
     documentId: string
   ) => {
     event.stopPropagation();
-    try {
-      const response = await fetch(
-        `/api/documents/document/${documentId}/restore`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(documentId),
-        }
-      );
-      if (response.status === 200) {
-        toast({
-          title: "Restoring note...",
-          description: "Note restored successfully.",
-        });
-        updateDocumentById(documentId, { isArchived: false });
-      }
-    } catch (error) {
-      console.error("error restoring document: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Error restoring note.",
-      });
-    }
+    await restoreDocument(documentId, toast);
+    await fetchDocuments()
   };
 
   const onRemove = async (documentId: string) => {
-    try {
-      const response = await fetch(`/api/documents/document/${documentId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(documentId),
-      });
-      if (response.status === 200) {
-        toast({
-          title: "Deleting note...",
-          description: "Note deleted successfully.",
-        });
-        deleteDocumentById(documentId);
-        if (params.documentId === documentId) {
-          router.push("/documents");
-        }
-      }
-    } catch (error) {
-      console.error("error deleting document: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Error deleting note.",
-      });
-    }
+    await deleteDocument(documentId, router, toast);
+    await fetchDocuments()
   };
 
   if (documents === undefined) {

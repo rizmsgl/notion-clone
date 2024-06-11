@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { SingleImageDropzone } from "../image-dropzone";
 import { useDocsStore } from "@/store/documents-store";
 import { Document } from "@/types/document-types";
+import updateDocument from "@/actions/update-document";
 
 type Props = {};
 
@@ -18,7 +19,7 @@ const CoverImageModal = (props: Props) => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const documents = useDocsStore((state) => state.documents);
   const [document, setDocument] = useState<Document | undefined>(undefined);
-  const updateDocument = useDocsStore((state) => state.updateDocument);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
 
   useEffect(() => {
     const documentId = params?.documentId;
@@ -33,21 +34,8 @@ const CoverImageModal = (props: Props) => {
       ...document,
       coverImage: imageUrl,
     };
-    try {
-      const response = await fetch(`/api/documents/document/${documentId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: documentId, coverImage: imageUrl }),
-      });
-      if (response.status === 200) {
-        updateDocument(updatedDocument);
-        console.log("Cover image updated successfully.");
-      }
-    } catch (error) {
-      console.error("Error updating cover image: ", error);
-    }
+    await updateDocument(updatedDocument, documentId as string);
+    await fetchDocuments();
   };
 
   const onClose = () => {

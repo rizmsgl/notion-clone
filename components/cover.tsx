@@ -10,6 +10,7 @@ import { ImageIcon, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Document } from "@/types/document-types";
 import { useDocsStore } from "@/store/documents-store";
+import removeCoverImage from "@/actions/remove-cover-image";
 
 type Props = {
   document: Document | undefined;
@@ -21,39 +22,20 @@ export const Cover = ({ preview, document, className }: Props) => {
   const { edgestore } = useEdgeStore();
   const params = useParams();
   const coverImage = useCoverImage();
-  const updateDocument = useDocsStore((state) => state.updateDocument);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
 
   // remove cover image
-  const removeCoverImage = async () => {
+  const removeCover = async () => {
     const documentId = params.documentId;
     //@ts-ignore
-    const updatedDocument: Document = {
-      ...document,
-      coverImage: "",
-    };
     if (document?.coverImage !== "") {
       await edgestore.publicFiles.delete({
         url: document?.coverImage as string,
       });
     }
-    try {
-      const response = await fetch(
-        `/api/documents/document/${documentId}/image`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(documentId),
-        }
-      );
-      if (response.status === 200) {
-        console.log("Cover image removed successfully.");
-        updateDocument(updatedDocument);
-      }
-    } catch (error) {
-      console.error("Error removing cover image: ", error);
-    }
+    await removeCoverImage(documentId as string);
+    await fetchDocuments()
+
   };
 
   return (
@@ -85,7 +67,7 @@ export const Cover = ({ preview, document, className }: Props) => {
             Change cover
           </Button>
           <Button
-            onClick={removeCoverImage}
+            onClick={removeCover}
             className="text-muted-foreground text-xs"
             variant="outline"
             size="sm"

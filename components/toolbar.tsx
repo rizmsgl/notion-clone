@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { ImageIcon, X, HandMetal } from "lucide-react";
 import TextareaAutosize from "react-textarea-autosize";
 import IconPicker from "./icon-picker";
+import updateDocument from "@/actions/update-document";
 
 type Props = {
   initialData: Document;
@@ -18,7 +19,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [value, setValue] = useState(initialData.title);
   const coverImage = useCoverImage();
-  const updateDocument = useDocsStore((state) => state.updateDocument);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
 
   useEffect(() => {
     setValue(initialData.title || "Untitled");
@@ -27,24 +28,8 @@ const Toolbar = ({ initialData, preview }: Props) => {
   // update document through api
 
   const patchDocument = async(updatedDocument: Document) => {
-    try{
-      const response = await fetch(
-        `/api/documents/document/${initialData._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: initialData._id, ...updatedDocument}),
-        }
-      );
-      if (response.status === 200) {
-        updateDocument(updatedDocument);
-        console.log("Document title updated successfully.");
-      }
-    }catch(error){
-      console.error("Error updating document: ", error)
-    }
+    await updateDocument(updatedDocument, updatedDocument._id)
+    await fetchDocuments()
   }
 
   // enable input
@@ -90,23 +75,8 @@ const Toolbar = ({ initialData, preview }: Props) => {
       icon: "",
     };
     // remove icon
-    try{
-      const response = await fetch(`/api/documents/document/${initialData._id}/icon`,
-        {
-          method: 'PATCH',
-          headers:{
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ id: initialData._id}),
-        }
-      )
-      if (response.status === 200){
-        updateDocument(updatedDocument);
-        console.log("Icon removed successfully.");
-      }
-    }catch(error){
-      console.error("Error removing icon: ", error)
-    }
+    await updateDocument(updatedDocument, updatedDocument._id);
+    await fetchDocuments()
   };
   // remove icon
 

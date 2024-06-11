@@ -18,6 +18,8 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "./navbar";
 import TrashBox from "./trash-box";
+import createDocument from "@/actions/create-document";
+import { useDocsStore } from "@/store/documents-store";
 
 export const Navigation = () => {
   const router = useRouter();
@@ -34,6 +36,7 @@ export const Navigation = () => {
   const navbarRef = useRef<ElementRef<"div">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments)
 
   // useEffect for side navigation and top navbar
   useEffect(() => {
@@ -106,30 +109,8 @@ export const Navigation = () => {
       title: "Untitled",
       parentDocument: null,
     };
-    try {
-      const response = await fetch("/api/documents/document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
-      if (!response.ok) throw new Error("Failed to create a new note.");
-      const document = await response.json();
-      const documentId = document._id;
-      router.push(`/documents/${documentId}`);
-      toast({
-        title: "New note.",
-        description: "Note created successfully.",
-      });
-    } catch (error) {
-      console.error("Error creating document: ", error);
-      toast({
-        variant: "destructive",
-        title: "Oops ! something went wrong.",
-        description: "Failed to create new note.",
-      });
-    }
+    await createDocument(data, router, toast);
+    await fetchDocuments()
   };
 
   return (

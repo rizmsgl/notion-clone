@@ -3,7 +3,7 @@ import { Footer } from "@/app/(marketing)/_components/footer";
 
 const MarketingPage = () => {
   return (
-    <div className="min-h-full dark:bg-darkBackground">
+    <div className="dark:bg-darkBackground">
       <Hero />
       <Footer />
     </div>

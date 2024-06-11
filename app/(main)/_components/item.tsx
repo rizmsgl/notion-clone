@@ -20,6 +20,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocsStore } from "@/store/documents-store";
+import archiveDocument from "@/actions/archive-document";
 
 type Props = {
   id?: string;
@@ -48,7 +49,7 @@ export const Item = ({
   const { user } = useUser();
   const router = useRouter();
   const { toast } = useToast();
-  const updateDocumentById = useDocsStore((state) => state.updateDocumentById);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments);
   /** onCreate method here */
   const onCreate = async (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -81,30 +82,8 @@ export const Item = ({
   ) => {
     event.stopPropagation();
     if (!id) return;
-    try {
-      const response = await fetch(`/api/documents/document/${id}/archive`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(id),
-      });
-      if (response.status === 200) {
-        toast({
-          title: "Moving Note...",
-          description: "Note moved successfully to trash.",
-        });
-        updateDocumentById(id, { isArchived: true });
-        router.push("/documents");
-      }
-    } catch (error) {
-      console.error("Error moving document to trash: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Failed to move note to trash.",
-      });
-    }
+    await archiveDocument(id, router, toast);
+    await fetchDocuments();
   };
 
   const handleExpand = (

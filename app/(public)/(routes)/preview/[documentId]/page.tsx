@@ -1,4 +1,5 @@
 "use client"
+import updateDocument from "@/actions/update-document";
 import { Cover } from "@/components/cover";
 import Toolbar from "@/components/toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -19,6 +20,7 @@ const DocumentIdPage = ({ params }: Props) => {
     []
   );
   const [document, setDocument] = useState<Document | undefined>(undefined);
+  const fetchDocuments = useDocsStore((state) => state.fetchDocuments)
 
   const getDocument = async () =>{
     try{
@@ -43,20 +45,12 @@ const DocumentIdPage = ({ params }: Props) => {
   
   },[params])
   const onChange = async (content: string) => {
-    try {
-      const response = await fetch(`/api/documents/document/${document?._id}`, {
-        method: 'PUT',
-        headers:{
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({id: document?._id, content})
-      })
-      if (response.status === 200){
-        console.log("Document content updated successfully.")
-      }
-    }catch(error){
-      console.error("Error updating document content: ", error)
+    const updatedDocument = {
+      ...document,
+      content: content,
     }
+    await updateDocument(updatedDocument as Document, document?._id as string);
+    await fetchDocuments()
   }
   if (document === undefined) {
     return (

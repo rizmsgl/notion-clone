@@ -12,37 +12,17 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { File } from "lucide-react";
+import { useDocsStore } from "@/store/documents-store";
 type Props = {};
 
 const SearchCommand = (props: Props) => {
   const { user } = useUser();
   const router = useRouter();
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [isMounted, setIsMounted] = useState(false);
+  const documents = useDocsStore((state) => state.documents)
   const toggle = useSearch((store) => store.toggle);
   const isOpen = useSearch((store) => store.isOpen);
   const onClose = useSearch((store) => store.onClose);
-  useEffect(() => {
-    const getDocuments = async () => {
-      try {
-        const response = await fetch("/api/documents", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.status === 200) {
-          const documents = await response.json();
-          setDocuments(documents);
-        }
-      } catch (error) {
-        console.error("Failed to fetch search box documents: ", error);
-      }
 
-      setIsMounted(true);
-    };
-    getDocuments();
-  }, []);
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {

@@ -1,3 +1,5 @@
+import deleteDocument from "@/actions/delete-document";
+import restoreDocument from "@/actions/restore-document";
 import { ConfirmModal } from "@/components/modals/confirm-modal";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -13,56 +15,17 @@ const Banner = ({ documentId }: Props) => {
   const { toast } = useToast();
   // remove and restore
   const onRemove = async () => {
-    try {
-      const response = await fetch(`/api/documents/document/${documentId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(documentId),
-      });
-      if (response.status === 200) {
-        toast({
-          title: "Deleting note...",
-          description: "Note deleted successfully.",
-        });
-        router.push("/documents");
-      }
-    } catch (error) {
-      console.error("Failed to delete note: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Failed to delete note.",
-      });
-    }
+    await deleteDocument(
+      documentId,
+      router,
+      toast
+    )
   };
   const onRestore = async () => {
-    try {
-      const response = await fetch(
-        `/api/documents/document/${documentId}/restore`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(documentId),
-        }
-      );
-      if (response.status === 200) {
-        toast({
-          title: "Restoring note...",
-          description: "Note restored successfully.",
-        });
-      }
-    } catch (error) {
-      console.error("Failed to restore note: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Failed to restore note.",
-      });
-    }
+    await restoreDocument(
+      documentId,
+      router,
+    )
   };
 
   return (

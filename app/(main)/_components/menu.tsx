@@ -14,6 +14,8 @@ import { MoreHorizontal, Save, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Document } from "@/types/document-types";
+import archiveDocument from "@/actions/archive-document";
+import updateDocument from "@/actions/update-document";
 
 type Props = {
   initialData: Document | undefined;
@@ -23,43 +25,12 @@ export const Menu = ({ initialData }: Props) => {
   const { toast } = useToast();
   const router = useRouter();
   const { user } = useUser();
-  const updateDocument = useDocsStore((state) => state.updateDocument);
+  const fetchDocuments= useDocsStore((state) => state.fetchDocuments);
   const documents = useDocsStore((state) => state.documents);
   // archive
   const onArchive = async () => {
-    try {
-      const response = await fetch(
-        `/api/documents/document/${initialData?._id}/archive`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(initialData?._id),
-        }
-      );
-      if (response.status === 200) {
-        toast({
-          title: "Moving Note...",
-          description: "Note moved successfully to trash.",
-        });
-        //@ts-ignore
-        const updatedDocument: Document = {
-          ...initialData,
-          isArchived: true,
-        };
-        updateDocument(updatedDocument);
-
-        router.push("/documents");
-      }
-    } catch (error) {
-      console.error("Error moving document to trash: ", error);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Failed to move note to trash.",
-      });
-    }
+    await archiveDocument(initialData?._id as string, router, toast);
+    await fetchDocuments()
   };
 
   const onSaveChanges = async () => {
@@ -68,28 +39,8 @@ export const Menu = ({ initialData }: Props) => {
     if (document === undefined) {
       throw new TypeError('No Document was found with the given ID.');
     }
-    try{
-      const response = await fetch(
-        `/api/documents/document/${initialData?._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: initialData?._id, ...document}),
-        }
-      );
-      if (response.status === 200) {
-        toast({
-          title: "Saving Changes...",
-          description: "Changes saved successfully.",
-        });
-        updateDocument(document[0]);
-        console.log("Document changes saved successfully.");
-      }
-    }catch(error){
-      console.error("Error saving document changes: ", error);
-    }
+    await updateDocument(document[0], initialData?._id as string);
+    await fetchDocuments()
   }
 
   return (

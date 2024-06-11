@@ -13,6 +13,7 @@ import { ThemeSelector } from "@/components/theme-selector";
 import Link from "next/link";
 import { SmallScreenMenu } from "@/components/small-screen-menu";
 import { useState } from "react";
+import { ChevronRightIcon, Loader } from "lucide-react";
 
 export const Navbar = () => {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -35,17 +36,15 @@ export const Navbar = () => {
           <div className="max-sm:hidden w-1/2 justify-end flex items-center gap-x-2">
             {!isLoaded && (
               <>
-                <Button disabled size="sm">
-                  <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </Button>
+               <Loader className="mr-2 h-4 w-4 animate-spin"/>
               </>
             )}
             {!isSignedIn && isLoaded && (
               <>
                 <SignInButton mode="modal">
                   <Button size="sm">
-                    <PersonIcon className="mr-2 h-4 w-4" /> Login
+                    Login
+                    <ChevronRightIcon className="h-4 w-4 ml-2" />
                   </Button>
                 </SignInButton>
               </>

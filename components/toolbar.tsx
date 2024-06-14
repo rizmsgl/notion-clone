@@ -27,10 +27,10 @@ const Toolbar = ({ initialData, preview }: Props) => {
 
   // update document through api
 
-  const patchDocument = async(updatedDocument: Document) => {
-    await updateDocument(updatedDocument, updatedDocument._id)
-    updateDocumentState(updatedDocument)
-  }
+  const patchDocument = async (updatedDocument: Document) => {
+    await updateDocument(updatedDocument, updatedDocument._id);
+    updateDocumentState(updatedDocument);
+  };
 
   // enable input
   const enableInput = () => {
@@ -62,13 +62,23 @@ const Toolbar = ({ initialData, preview }: Props) => {
     }
   };
 
+  const onBlur = async (event: React.FocusEvent<HTMLTextAreaElement>) => {
+    const updatedDocument: Document = {
+      ...initialData,
+      title: value || "Untitled",
+    };
+    event.preventDefault();
+    await patchDocument(updatedDocument);
+    disableInput();
+  };
+
   const onIconSelect = async (icon: string) => {
-    const updatedDocument: Document ={
+    const updatedDocument: Document = {
       ...initialData,
       icon,
-    }
+    };
     await patchDocument(updatedDocument);
-    updateDocumentState(updatedDocument)
+    updateDocumentState(updatedDocument);
   };
   const onRemoveIcon = async () => {
     const updatedDocument: Document = {
@@ -77,7 +87,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
     };
     // remove icon
     await updateDocument(updatedDocument, updatedDocument._id);
-    updateDocumentState(updatedDocument)
+    updateDocumentState(updatedDocument);
   };
   // remove icon
 
@@ -131,7 +141,7 @@ const Toolbar = ({ initialData, preview }: Props) => {
       {isEditing && !preview ? (
         <TextareaAutosize
           ref={inputRef}
-          onBlur={disableInput}
+          onBlur={onBlur}
           onKeyDown={onKeyDown}
           value={value}
           onChange={(e) => onChange(e.target.value)}

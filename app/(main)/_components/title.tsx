@@ -35,10 +35,6 @@ export const Title = ({ initialData }: Props) => {
   };
   const onKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      const data = {
-        id: initialData._id,
-        title: title || "Untitled",
-      };
       const updatedDocument: Document = {
         ...initialData,
         title: title || "Untitled",
@@ -48,6 +44,16 @@ export const Title = ({ initialData }: Props) => {
       disableInput();
     }
   };
+
+  const onBlur = async (event: React.FocusEvent<HTMLInputElement>) => {
+    const updatedDocument: Document = {
+      ...initialData,
+      title: title || "Untitled",
+    };
+    await updateDocument(updatedDocument, initialData._id);
+    updateDocumentState(updatedDocument);
+    disableInput();
+  };
   return (
     <div className="flex items-center gap-x-1">
       {!!initialData.icon && <p>{initialData.icon}</p>}
@@ -55,7 +61,7 @@ export const Title = ({ initialData }: Props) => {
         <Input
           ref={inputRef}
           onClick={enableInput}
-          onBlur={disableInput}
+          onBlur={onBlur}
           onChange={onChange}
           onKeyDown={onKeyDown}
           value={title}

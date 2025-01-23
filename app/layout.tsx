@@ -7,7 +7,7 @@ import { ModalProvider } from "@/components/providers/modal-provider";
 import { EdgeStoreProvider } from "@/lib/edgestore";
 
 export const metadata: Metadata = {
-  title: "Note Niche",
+  title: "Oclap Note",
   description: "The connected workspace where better work happens.",
   icons: {
     icon: [

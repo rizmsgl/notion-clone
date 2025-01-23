@@ -11,7 +11,7 @@ const Error = () => {
       <Image src="/illustrations/error-dark.png" height="300" width="300" alt="Error" className='hidden dark:block'/>
       <h2 className='font-medium text-xl'>Something Went Wrong</h2>
       <Button asChild>
-        <Link href="/">Go Back to Note Niche</Link>
+        <Link href="/">Go Back to Oclap Note</Link>
       </Button>
     </div>
   )

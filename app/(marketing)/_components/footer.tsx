@@ -11,10 +11,10 @@ export const Footer = () => {
                     ml-0 max-md:flex-col">
                         <Link href="/" className="justify-self-start cursor-pointer
                         decoration-0 font-luckiestGuy text-2xl mb-[16px] flex items-center font-medium">
-                            Note Niche
+                            Oclap Note
                         </Link>
                         <p className="font-crimson text-xl mb-[16px]">
-                            Note Niche &trade; {new Date().getFullYear()} TradeMark.
+                            Oclap Note &trade; {new Date().getFullYear()} TradeMark.
                         </p>
                         <div className="flex justify-around items-center w-[220px] mb-[16px]">
                             <Link href="https://github.com/Mlika-Gaith" target="_blank">

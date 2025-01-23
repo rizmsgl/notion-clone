@@ -39,7 +39,7 @@ const SearchCommand = (props: Props) => {
   };
   return (
     <CommandDialog open={isOpen} onOpenChange={onClose}>
-      <CommandInput placeholder={`search ${user?.fullName}'s Note Niche`} />
+      <CommandInput placeholder={`search ${user?.fullName}'s Oclap Note`} />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Documents">

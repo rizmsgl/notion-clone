@@ -43,7 +43,7 @@ const DocumentsPage = () => {
       />
       <h2 className="text-lg font-medium text-center pt-5">
         Welcome to {user?.firstName}&apos;s{" "}
-        <span className="text-brand font-luckiestGuy">Note Niche</span>
+        <span className="text-brand font-luckiestGuy">Oclap Note</span>
       </h2>
       <h2 className="text-md font-medium text-center mb-3">
         Add a note !

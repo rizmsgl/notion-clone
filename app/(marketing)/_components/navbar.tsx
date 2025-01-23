@@ -55,7 +55,7 @@ export const Navbar = () => {
                   Welcome {user?.firstName}
                 </p>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href="/documents">Enter Note Niche</Link>
+                  <Link href="/documents">Enter Oclap Note</Link>
                 </Button>
                 <UserButton afterSignOutUrl="/" />
               </>
@@ -118,7 +118,7 @@ export const Navbar = () => {
                     cursor-pointer border-b pb-2"
           >
             <Button variant="link" asChild>
-              <Link href="/documents">Enter Note Niche</Link>
+              <Link href="/documents">Enter Oclap Note</Link>
             </Button>
           </li>
         )}

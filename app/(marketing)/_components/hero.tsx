@@ -24,11 +24,11 @@ const Hero = (props: Props) => {
                             tracking-wide font-crimson"
               >
                 Welcome to{" "}
-                <span className="font-luckiestGuy text-brand">Note Niche</span>,
+                <span className="font-luckiestGuy text-brand">Oclap Note</span>,
                 where your ideas, documents and plans come together.
               </p>
               <h1 className="mb-[24px] text-5xl max-lg:text-4xl leading-[46px] font-light font-luckiestGuy">
-                Note Niche is the connected workspace where better, faster work
+                Oclap Note is the connected workspace where better, faster work
                 happens.
               </h1>
               <p
@@ -52,7 +52,7 @@ const Hero = (props: Props) => {
                       onMouseEnter={onHover}
                       onMouseLeave={onHover}
                     >
-                      Get Note Niche{" "}
+                      Get Oclap Note{" "}
                       {!hovered ? (
                         <ChevronRightIcon className="h-4 w-4 ml-2" />
                       ) : (

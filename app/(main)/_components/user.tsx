@@ -31,7 +31,7 @@ export const User = () => {
               <AvatarImage src={user?.imageUrl} />
             </Avatar>
             <span className="text-start font-crimson font-medium text-lg line-clamp-1">
-              {user?.firstName}&apos;s Niche
+              {user?.firstName}&apos;s Oclap
             </span>
           </div>
           <TokensIcon className="ml-2 text-muted-foreground h-4 w-4" />
@@ -55,7 +55,7 @@ export const User = () => {
             </div>
             <div className="space-y-1">
               <p className="text-sm line-clamp-1">
-                {user?.fullName}&apos;s Note Niche
+                {user?.fullName}&apos;s Oclap Note
               </p>
             </div>
           </div>
